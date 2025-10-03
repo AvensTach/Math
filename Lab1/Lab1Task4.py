@@ -1,12 +1,11 @@
 import numpy as np
-import math
 
 a_length = 1.0
 b_length = 4.0
-angle_phi = math.pi / 3
+angle_phi = np.pi / 3
 
 # Calculate a * b
-a_dot_b = np.around(a_length * b_length * math.cos(angle_phi), decimals=3)
+a_dot_b = np.around(a_length * b_length * np.cos(angle_phi), decimals=3)
 print(f"The dot product a·b is: {a_dot_b}")
 
 # a) (4a + b) . (3a - b) ---
