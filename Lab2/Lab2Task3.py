@@ -96,7 +96,7 @@ def g(x):
 x = np.linspace(-5, 5, 1000)
 y_f = f(x)
 y_g = g(x)
-
+ 0 0 1 -1 0
 diff = y_f - y_g
 
 zero_crossings_indices = np.where(np.diff(np.sign(diff)))[0]
