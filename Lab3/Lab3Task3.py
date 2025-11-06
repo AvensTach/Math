@@ -1,7 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+
 plt.switch_backend('TkAgg')
+
+
 # Helper function to generate cylinder data
 def get_cylinder_data(R, axis_index, V_range=5):
     u = np.linspace(0, 2 * np.pi, 50)
@@ -10,15 +13,16 @@ def get_cylinder_data(R, axis_index, V_range=5):
 
     coords = [R * np.cos(U), R * np.sin(U), V]
 
-    if axis_index == 1: # Cylinder x^2 + z^2 = R^2 (Axis Y)
-        return coords[0], coords[2], coords[1] # X, Y, Z = R*cos, V, R*sin
-    else: # Cylinder x^2 + y^2 = R^2 (Axis Z)
-        return coords[0], coords[1], coords[2] # X, Y, Z = R*cos, R*sin, V
+    if axis_index == 1:  # Cylinder x^2 + z^2 = R^2 (Axis Y)
+        return coords[0], coords[2], coords[1]  # X, Y, Z = R*cos, V, R*sin
+    else:  # Cylinder x^2 + y^2 = R^2 (Axis Z)
+        return coords[0], coords[1], coords[2]  # X, Y, Z = R*cos, R*sin, V
+
 
 # --- Parameters ---
 R1 = 3  # Radius for Cylinder 1: x^2 + z^2 = 9 (Axis Y)
 R2 = 4  # Radius for Cylinder 2: x^2 + y^2 = 16 (Axis Z)
-V_RANGE = 5 # Height/Length of the cylinders
+V_RANGE = 5  # Height/Length of the cylinders
 
 # --- Plotting ---
 fig = plt.figure(figsize=(8, 8))
@@ -43,10 +47,14 @@ ax.set_zlabel('Z')
 ax.set_box_aspect([1, 1, 1])
 
 # Set limits to include the cylinders completely
-max_coord = max(R1, R2, V_RANGE) + 1 # Add some padding
+max_coord = max(R1, R2, V_RANGE) + 1  # Add some padding
 ax.set_xlim(-max_coord, max_coord)
 ax.set_ylim(-max_coord, max_coord)
 ax.set_zlim(-max_coord, max_coord)
+
+ax.quiver(0, 0, 0, 10, 0, 0, color='blue', arrow_length_ratio=0.1)
+ax.quiver(0, 0, 0, 0, 10, 0, color='red', arrow_length_ratio=0.1)
+ax.quiver(0, 0, 0, 0, 0, 10, color='green', arrow_length_ratio=0.1)
 
 # Add grid lines and turn off axis panes for a cleaner look
 ax.xaxis.pane.fill = False
@@ -54,9 +62,9 @@ ax.yaxis.pane.fill = False
 ax.zaxis.pane.fill = False
 ax.grid(True, linestyle=':', alpha=0.7)
 
-ax.view_init(elev=20, azim=45) # Experiment with these values!
+ax.view_init(elev=20, azim=45)  # Experiment with these values!
 
-plt.suptitle('Перетин двох кругових циліндрів', fontsize=16) # Main title
-plt.title(r'$x^2 + z^2 = 9$, $x^2 + y^2 = 16$', fontsize=14, loc='center', pad=-10) # Subtitle for equations
+plt.suptitle('Перетин двох кругових циліндрів', fontsize=16)  # Main title
+plt.title(r'$x^2 + z^2 = 9$, $x^2 + y^2 = 16$', fontsize=14, loc='center', pad=-10)  # Subtitle for equations
 
 plt.show()

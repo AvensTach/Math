@@ -3,7 +3,7 @@ import matplotlib.patches as mpatches
 import matplotlib.path as mpath
 import numpy as np
 import mpl_toolkits.mplot3d.art3d as art3d
-
+plt.switch_backend('TkAgg')
 VARIANT = 29
 N_POLYGON_SIDES = VARIANT  # Кількість сторін багатокутника: 29
 Z_PLANE = 5  # Встановлюємо загальну Z-площину для всіх фігур

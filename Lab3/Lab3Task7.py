@@ -32,6 +32,10 @@ ax1.set_ylabel("Вісь Y")
 ax1.set_zlabel("Вісь Z")
 ax1.legend()
 
+ax1.quiver(0, 0, 0, 10, 0, 0, color='blue', arrow_length_ratio=0.1)
+ax1.quiver(0, 0, 0, 0, 10, 0, color='red', arrow_length_ratio=0.1)
+ax1.quiver(0, 0, 0, 0, 0, 10, color='green', arrow_length_ratio=0.1)
+
 # --- 2) Друга область: Розсіяний графік поверхні ---
 ax2 = fig.add_subplot(2, 2, 2, projection='3d')
 
@@ -57,6 +61,10 @@ ax2.set_xlabel("Вісь X")
 ax2.set_ylabel("Вісь Y")
 ax2.set_zlabel("Вісь Z")
 
+ax2.quiver(0, 0, 0, 10, 0, 0, color='blue', arrow_length_ratio=0.1)
+ax2.quiver(0, 0, 0, 0, 10, 0, color='red', arrow_length_ratio=0.1)
+ax2.quiver(0, 0, 0, 0, 0, 10, color='green', arrow_length_ratio=0.1)
+
 ax3 = fig.add_subplot(2, 2, 3, projection='polar')
 
 phi_bg = np.linspace(0, 2 * np.pi, 200)
@@ -65,13 +73,17 @@ P, R = np.meshgrid(phi_bg, r_bg)
 
 Z = R - 6 * np.cos(5 * P)
 
+
 norm = colors.TwoSlopeNorm(vcenter=0)
 
-ax3.pcolormesh(P, R, Z, cmap='RdBu', shading='auto', norm=norm)
+# ax3.pcolormesh(P, R, Z, cmap='RdBu', shading='auto', norm=norm)
+
 
 # Дані для самої кривої ("контурний графік")
 phi_line = np.linspace(0, 2 * np.pi, 1000)
 r_line = 6 * np.cos(5 * phi_line)
+
+ax3.fill(phi_line, r_line, color='blue', alpha=0.7)
 
 # Малювання кривої чорним кольором поверх фону
 ax3.plot(phi_line, r_line, color='black', linewidth=2)

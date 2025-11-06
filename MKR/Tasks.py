@@ -1,19 +1,16 @@
+# variant = 5
 import numpy as np
 import matplotlib.pyplot as plt
-from itertools import product, combinations
 
-# --- Завдання 1: Трапеція ---
+plt.switch_backend('TkAgg')
 
-print("--- Завдання 1: Трапеція ---")
+print("Завдання 1:")
 
-# 1.1 Перевірка, що точки є вершинами трапеції
-# Задаємо точки
 A = np.array([3, -2, 2])
 B = np.array([-3, 1, 0])
 C = np.array([-6, 3, 1])
 D = np.array([6, -3, 5])
 
-# Знаходимо вектори сторін
 vec_AB = B - A
 vec_BC = C - B
 vec_CD = D - C
@@ -24,14 +21,14 @@ print(f"Вектор CD = {vec_CD}")
 print(f"Вектор BC = {vec_BC}")
 print(f"Вектор DA = {vec_DA}")
 
-# Перевірка на паралельність (колінеарність)
-# Два вектори u, v колінеарні, якщо їх векторний добуток = 0
+
 cross_AB_CD = np.cross(vec_AB, vec_CD)
 cross_BC_DA = np.cross(vec_BC, vec_DA)
 
-# Перевіряємо, чи близькі до нуля (для уникнення проблем з float)
-is_AB_CD_parallel = np.allclose(cross_AB_CD, 0)
-is_BC_DA_parallel = np.allclose(cross_BC_DA, 0)
+is_AB_CD_parallel = cross_AB_CD.all(0)
+is_BC_DA_parallel = cross_BC_DA.all(0)
+
+
 
 print(f"\nAB || CD? {is_AB_CD_parallel}")
 print(f"BC || DA? {is_BC_DA_parallel}")
@@ -41,7 +38,7 @@ if is_AB_CD_parallel != is_BC_DA_parallel:
 else:
     print("Висновок: Фігура не є трапецією (або є паралелограмом).")
 
-# 1.2 Знаходження косинусів внутрішніх кутів при більшій основі
+# Знаходження косинусів внутрішніх кутів при більшій основі
 len_AB = np.linalg.norm(vec_AB)
 len_CD = np.linalg.norm(vec_CD)
 
@@ -69,14 +66,30 @@ if len_CD > len_AB:
     print(f"cos(D) = {cos_D:.4f} (Точне значення: 54 / (14 * sqrt(19)) = 27 / (7*sqrt(19)))")
 else:
     print("Більша основа - AB. Шукаємо кути A і B.")
-    # Аналогічні розрахунки для кутів A і B, якщо потрібно
-    pass
+    # Кут A (між векторами AD і AB)
+    vec_AD = -vec_DA
+    # Кут B (між векторами BA і BC)
+    vec_BA = -vec_AB
 
-# 1.3 Зображення трапеції
+    # Знаходимо довжини сторін, що утворюють кути
+    len_AD = np.linalg.norm(vec_AD)  # Це те ж саме, що np.linalg.norm(vec_DA)
+    len_BC = np.linalg.norm(vec_BC)
+
+    # cos(A) = (AD · AB) / (|AD| * |AB|)
+    dot_A = np.dot(vec_AD, vec_AB)
+    cos_A = dot_A / (len_AD * len_AB)
+
+    # cos(B) = (BA · BC) / (|BA| * |BC|)
+    dot_B = np.dot(vec_BA, vec_BC)
+    cos_B = dot_B / (len_AB * len_BC)  # Оскільки |BA| = |AB|
+
+    print(f"cos(A) = {cos_A:.4f}")
+    print(f"cos(B) = {cos_B:.4f}")
+
+
 fig = plt.figure(figsize=(14, 7))
 ax1 = fig.add_subplot(121, projection='3d')
 
-# Створюємо масив точок для малювання (A -> B -> C -> D -> A)
 points = np.array([A, B, C, D, A])
 
 # Малюємо лінії
@@ -101,18 +114,25 @@ print("Малюємо куб та параболи на його гранях...
 
 ax2 = fig.add_subplot(122, projection='3d')
 
-# Елегантний спосіб намалювати ребра куба
-# 1. Генеруємо 8 вершин куба (0,0,0) ... (1,1,1)
-r = [0, 1]
-vertices = np.array(list(product(r, r, r)))
-ax2.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2], s=0)  # для масштабу
+# 2. Малюємо 12 ребер, згрупувавши їх за осями
+xyz_values = [0, 1]
 
-# 2. Малюємо ребро, якщо 2 вершини відрізняються лише по 1 координаті
-for s, e in combinations(vertices, 2):
-    if np.sum(np.abs(s - e)) == 1:
-        ax2.plot3D(*zip(s, e), color="k")
+# 4 ребра, паралельні осі X (змінюється 'x', 'y' та 'z' фіксовані)
+for y in xyz_values:
+    for z in xyz_values:
+        ax2.plot3D([0, 1], [y, y], [z, z], color="k")
 
-# 3. Малюємо параболи на 3-х видимих гранях
+# 4 ребра, паралельні осі Y (змінюється 'y', 'x' та 'z' фіксовані)
+for x in xyz_values:
+    for z in xyz_values:
+        ax2.plot3D([x, x], [0, 1], [z, z], color="k")
+
+# 4 ребра, паралельні осі Z (змінюється 'z', 'x' та 'y' фіксовані)
+for x in xyz_values:
+    for y in xyz_values:
+        ax2.plot3D([x, x], [y, y], [0, 1], color="k")
+
+# 3. Малюємо параболи на гранях
 t = np.linspace(0, 1, 20)
 
 # Парабола на верхній грані (z=1)
@@ -136,11 +156,32 @@ y_p3 = t
 z_p3 = 4 * (t - 0.5) ** 2
 ax2.plot(x_p3, y_p3, z_p3, 'b-', linewidth=2, label='Парабола на x=1')
 
+# --- 3 "невидимі" грані (пунктирні лінії) ---
+
+# Парабола на нижній грані (z=0)
+x_p4 = t
+y_p4 = 4 * (t - 0.5) ** 2
+z_p4 = np.zeros_like(t) # z=0
+ax2.plot(x_p4, y_p4, z_p4, 'r--', linewidth=2, label='Парабола на z=0')
+
+# Парабола на задній грані (y=0)
+x_p5 = t
+y_p5 = np.zeros_like(t) # y=0
+z_p5 = -4 * (t - 0.5) ** 2 + 1
+ax2.plot(x_p5, y_p5, z_p5, 'g--', linewidth=2, label='Парабола на y=0')
+
+# Парабола на бічній грані (x=0)
+x_p6 = np.zeros_like(t) # x=0
+y_p6 = t
+z_p6 = 4 * (t - 0.5) ** 2
+ax2.plot(x_p6, y_p6, z_p6, 'b--', linewidth=2, label='Парабола на x=0')
+
+
 ax2.set_xlabel('X')
 ax2.set_ylabel('Y')
 ax2.set_zlabel('Z')
 ax2.set_title('Завдання 2: Куб з параболами')
-ax2.legend()
+ax2.legend(fontsize='medium') # Трохи зменшимо шрифт легенди, бо багато елементів
 ax2.grid(True)
 
 # Показати обидва графіки
