@@ -66,7 +66,7 @@ print(result.evalf())
 
 print("-" * 30)
 
-# Репета-2 ст. 66 № 3.1.29
+# Репета-2 ст. 28-60 № 3.1.29
 x, y = sp.symbols('x y')
 
 expression_inside = x**2 + 3*x*y - 4*x + 3*y - 1
@@ -118,8 +118,21 @@ norm_x = x0_val + float(slope_x) * t
 norm_y = y0_val + float(slope_y) * t
 norm_z = float(z0_val) - 1 * t
 
-ax.plot(norm_x, norm_y, norm_z, color='red', linewidth=3, label='Нормаль')
+ax.plot(norm_x, norm_y, norm_z, color='yellow', linewidth=3, label='Нормаль')
 ax.scatter(x0_val, y0_val, float(z0_val), color='black', s=100, label='Точка M')
+
+length = range_plot * 1.5
+origin_x, origin_y, origin_z = x0_val, y0_val, float(z0_val)
+
+ax.quiver(origin_x, origin_y, origin_z, length, 0, 0, color='r', arrow_length_ratio=0.1, linewidth=1.5)
+ax.text(origin_x+length, origin_y, origin_z, "X", color='r', fontsize=12, fontweight='bold')
+
+ax.quiver(origin_x, origin_y, origin_z, 0, length, 0, color='g', arrow_length_ratio=0.1, linewidth=1.5)
+ax.text(origin_x, origin_y+length, origin_z, "Y", color='g', fontsize=12, fontweight='bold')
+
+ax.quiver(origin_x, origin_y, origin_z, 0, 0, length, color='b', arrow_length_ratio=0.1, linewidth=1.5)
+ax.text(origin_x, origin_y, origin_z+length, "Z", color='b', fontsize=12, fontweight='bold')
+
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -128,14 +141,14 @@ ax.set_title(f'Дотична та нормаль у точці M({x0_val}, {y0_
 
 cyan_patch = mlines.Line2D([], [], color='cyan', alpha=0.5, label='Поверхня')
 orange_patch = mlines.Line2D([], [], color='orange', alpha=0.5, label='Дотична площина')
-red_line = mlines.Line2D([], [], color='red', label='Нормаль')
+red_line = mlines.Line2D([], [], color='yellow', label='Нормаль')
 plt.legend(handles=[cyan_patch, orange_patch, red_line])
 
 plt.show()
 
 print("-" * 30)
 
-# Репета-2 ст. 67 № 3.2.29
+# Репета-2 ст. 58-60 № 3.2.29
 
 x, y, z = sp.symbols('x y z')
 u = sp.sqrt(x**2 + y**2 + z**2)
@@ -149,7 +162,6 @@ grad_at_M = grad_u.subs(vals)
 
 vec_l = sp.Matrix([1, 2, -2])
 
-# 5.
 len_l = vec_l.norm()
 unit_vec_l = vec_l / len_l
 
@@ -167,15 +179,13 @@ print("-" * 30)
 
 
 
-# Репета-2 ст. 67 № 3.3.29
+# Репета-2 ст. 58-60 № 3.3.29
 
 sp.init_printing(use_unicode=True)
-x, y = sp.symbols('x y', real=True)  # Вказуємо, що змінні дійсні
+x, y = sp.symbols('x y', real=True)
 
-# 1. Функція
 z = x * sp.sqrt(y) - x ** 2 - y + 6 * x
 
-# 2. Перші похідні
 dz_dx = sp.diff(z, x)
 dz_dy = sp.diff(z, y)
 
@@ -183,26 +193,22 @@ print("--- Перші похідні ---")
 print(f"dz/dx = {dz_dx}")
 print(f"dz/dy = {dz_dy}")
 
-# 3. Пошук стаціонарних точок
 critical_points = sp.solve([dz_dx, dz_dy], (x, y))
 print(f"\nСтаціонарні точки: {critical_points}")
 
-# 4. Другі похідні (для перевірки достатньої умови)
-A = sp.diff(z, x, x)  # d2z/dx2
-B = sp.diff(z, x, y)  # d2z/dxdy
-C = sp.diff(z, y, y)  # d2z/dy2
+A = sp.diff(z, x, x)
+B = sp.diff(z, x, y)
+C = sp.diff(z, y, y)
 
 print("\n--- Аналіз точок ---")
 
 for point in critical_points:
     x0, y0 = point
 
-    # Обчислюємо значення A, B, C у точці
     val_A = A.subs({x: x0, y: y0})
     val_B = B.subs({x: x0, y: y0})
     val_C = C.subs({x: x0, y: y0})
 
-    # Дискримінант
     delta = val_A * val_C - val_B ** 2
     z_val = z.subs({x: x0, y: y0})
 
