@@ -2,10 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 plt.switch_backend('TkAgg')
-# Імпорт для 3D
-from mpl_toolkits.mplot3d import Axes3D
 
-# --- Налаштування 3D-сцени ---
+# Налаштування
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection='3d')
 ax.set_title("Завдання 2: Перетин двох циліндрів (Варіант 29)")
@@ -14,7 +12,7 @@ ax.set_ylabel("Y")
 ax.set_zlabel("Z")
 ax.set_box_aspect([1, 1, 1]) # Робимо осі пропорційними
 
-# --- Створення Циліндра 1 (x^2 + z^2 = 9) ---
+# Створення Циліндра 1 (x^2 + z^2 = 9)
 # Рухається вздовж осі Y
 u = np.linspace(0, 2 * np.pi, 50) # Кут
 v = np.linspace(-7, 7, 20)       # Висота/довжина вздовж Y
@@ -25,7 +23,7 @@ Y1 = V
 Z1 = 3 * np.sin(U)
 ax.plot_surface(X1, Y1, Z1, alpha=0.5, color='blue', rstride=1, cstride=1)
 
-# --- Створення Циліндра 2 (x^2 + y^2 = 16) ---
+# Створення Циліндра 2 (x^2 + y^2 = 16)
 # Рухається вздовж осі Z
 # u (кут) можна використати той самий
 v = np.linspace(-7, 7, 20) # Висота/довжина вздовж Z
@@ -42,17 +40,14 @@ ax.set_ylim([-5, 5])
 ax.set_zlim([-7, 7])
 
 
-# --- Функція анімації (обертання камери) ---
+# Функція анімації (обертання камери)
 def animate(frame):
     # Обертаємо Cцену, змінюючи кут 'azim'
-    # 'elev' = 20 (кут огляду зверху)
+    # 'elev' = 30 (кут огляду зверху)
     # 'azim' = frame (кут обертання)
-    ax.view_init(elev=30, azim=frame)
+    ax.view_init(elev=30, azim=4*frame)
     return fig,
 
-# --- Створення та запуск анімації ---
-# blit=False зазвичай необхідно для 3D
-# 'frames' від 0 до 359 для повного оберту
 anim = animation.FuncAnimation(fig, animate, frames=360,
                                interval=50, blit=False)
 
