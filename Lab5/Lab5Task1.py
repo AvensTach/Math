@@ -48,7 +48,7 @@ print("-" * 30)
 
 # Репета-2 ст. 166 № 29
 
-func = 1 / sp.sqrt(4 + sp.exp(x))
+func = 1 / (sp.sqrt(4 + sp.exp(x)))
 
 result = sp.integrate(func, (x, sp.ln(5), sp.ln(12)))
 

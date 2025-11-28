@@ -36,6 +36,8 @@ for i in range(1, k_max + 1):
     coef_b = bn.subs(n, i)
     fourier_series += coef_a * sp.cos(i*x) + coef_b * sp.sin(i*x)
 
+
+
 f_numeric_original = sp.lambdify(x, f_expr, "numpy")
 f_numeric_series = sp.lambdify(x, fourier_series, "numpy")
 
