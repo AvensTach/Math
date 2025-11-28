@@ -12,7 +12,7 @@ rhs = sp.exp(2*x)
 
 ode = sp.Eq(lhs, rhs)
 print("Диференціальне рівняння:")
-print(ode)
+sp.pprint(ode)
 print("-" * 30)
 
 solution = sp.dsolve(ode, y(x))
