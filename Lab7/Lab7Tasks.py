@@ -30,43 +30,54 @@ plt.xlim(0, 3.1)
 plt.ylim(0, np.max(y)*1.1)
 plt.show()
 
-# 1. Визначення підінтегральної функції для однієї пелюстки
+
+# 1. Інтегрування
 def polar_integrand(phi):
     rho_outer = 4 * np.sin(2 * phi)
     rho_inner = 2 * np.sqrt(3)
-    return 0.5 * (rho_outer**2 - rho_inner**2)
+    return 0.5 * (rho_outer ** 2 - rho_inner ** 2)
 
-# 2. Чисельне інтегрування (одна частина)
-phi_start = np.pi / 6
-phi_end = np.pi / 3
+
+# Межі для однієї пелюстки (I чверть)
+phi_start = np.pi / 6  # 30 градусів
+phi_end = np.pi / 3  # 60 градусів
+
 area_part, error2 = integrate.quad(polar_integrand, phi_start, phi_end)
-total_area2 = 4 * area_part
+
+# !!! ВИПРАВЛЕННЯ: Пелюсток, що задовольняють умову, лише 2 (1-ша і 3-тя чверть), а не 4
+total_area2 = 2 * area_part
 print(f"Завдання 8.2.29: Повна площа S ≈ {total_area2:.6f}")
 
-# 3. Побудова графіка в полярних координатах
+# 2. Побудова графіка
 plt.figure(figsize=(8, 8))
 ax = plt.subplot(111, projection='polar')
 
-# Повний діапазон кутів для малювання
-phi = np.linspace(0, 2*np.pi, 1000)
+# Малюємо криві
+phi = np.linspace(0, 2 * np.pi, 1000)
 rho_curve = 4 * np.sin(2 * phi)
 rho_circle = np.full_like(phi, 2 * np.sqrt(3))
 
-ax.plot(phi, rho_curve, 'r-', label=r'$\rho = 4 \sin 2\varphi$')
+# Щоб графік виглядав гарно, відфільтруємо від'ємні значення радіуса для відображення
+# (Matplotlib іноді дивно поводиться з від'ємними полярними радіусами)
+rho_curve_visible = np.where(rho_curve >= 0, rho_curve, 0)
+
+ax.plot(phi, rho_curve_visible, 'r-', label=r'$\rho = 4 \sin 2\varphi$')
 ax.plot(phi, rho_circle, 'b--', label=r'$\rho = 2\sqrt{3}$')
 
-# Заливка області (для всіх 4 частин)
-for k in range(4):
-    phi_fill = np.linspace(phi_start + k*np.pi/2, phi_end + k*np.pi/2, 100)
+# !!! ВИПРАВЛЕННЯ: Цикл для заливки тільки існуючих областей (k=0 та k=1 з кроком pi)
+for k in range(2):
+    # Зсуваємо на k * pi (180 градусів), щоб потрапити в 1-шу та 3-тю чверті
+    phi_fill = np.linspace(phi_start + k * np.pi, phi_end + k * np.pi, 100)
+
     rho_outer_fill = 4 * np.sin(2 * phi_fill)
     rho_inner_fill = np.full_like(phi_fill, 2 * np.sqrt(3))
-    # Використовуємо fill_between для полярних координат
+
     ax.fill_between(phi_fill, rho_inner_fill, rho_outer_fill, color='orange', alpha=0.5)
 
-ax.set_title('Графік до завдання 8.2.29 (Полярні координати)', va='bottom')
+ax.set_title('Графік до завдання 8.2.29 (Виправлений)', va='bottom')
 ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
+plt.ylim(0, 4.5)  # Обмежимо радіус для краси
 plt.show()
-
 # 1. Визначення функцій x від y
 def get_t_from_y(y):
     # t для лівої частини арки (0 < t < pi)
